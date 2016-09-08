@@ -192,7 +192,7 @@ func (this *service) processAcked(ackq *sessions.Ackqueue) {
 	for _, ackmsg := range ackq.Acked() {
 		// Let's get the messages from the saved message byte slices.
 
-		if (len(ackmsg.Msgbuf) == 0 || len(ackmsg.Ackbuf) == 0) && ackmsg.Mtype != messsage.MessageType.PINGREQ {
+		if (len(ackmsg.Msgbuf) == 0 || len(ackmsg.Ackbuf) == 0) && ackmsg.Mtype != message.PINGREQ {
 			glog.Errorf("process/processAcked: Unable to decode new %s as ackmsg Msgbuf buf is %v or ackmsg Ackbuf buf is %v", ackmsg.Mtype, ackmsg.Msgbuf, ackmsg.Ackbuf)
 			continue
 		}
