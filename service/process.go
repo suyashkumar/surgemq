@@ -324,7 +324,7 @@ func (this *service) processSubscribe(msg *message.SubscribeMessage) error {
 	for i, t := range topics {
 		var isPrivliged = regexp.MustCompile(`[#+]`)
 		if isPrivliged.MatchString(string(t)) {
-			if val, ok := AllowedMap[this.sess.ID()]; !ok {
+			if _, ok := AllowedMap[this.sess.ID()]; !ok {
 				return errors.New("Subscriber not allowed to use wildcards")
 			}
 		}
