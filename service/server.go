@@ -36,6 +36,7 @@ var (
 	ErrInvalidSubscriber      error = errors.New("service: Invalid subscriber")
 	ErrBufferNotReady         error = errors.New("service: buffer is not ready")
 	ErrBufferInsufficientData error = errors.New("service: buffer has insufficient data.")
+	allowedMap                      = make(map[string]int)
 )
 
 const (
@@ -288,7 +289,6 @@ func (this *Server) handleConnection(c io.Closer) (svc *service, err error) {
 		}
 		return nil, err
 	}
-
 	// Authenticate the user, if error, return error and exit
 	if err = this.authMgr.Authenticate(string(req.Username()), string(req.Password())); err != nil {
 		resp.SetReturnCode(message.ErrBadUsernameOrPassword)

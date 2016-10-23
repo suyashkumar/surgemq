@@ -23,10 +23,12 @@ import (
 	"github.com/surge/glog"
 	"github.com/surgemq/message"
 	"github.com/surgemq/surgemq/sessions"
+	"regexp"
 )
 
 var (
 	errDisconnect = errors.New("Disconnect")
+	AllowedMap    = make(map[string]int)
 )
 
 // processor() reads messages from the incoming buffer and processes them
@@ -320,6 +322,12 @@ func (this *service) processSubscribe(msg *message.SubscribeMessage) error {
 	this.rmsgs = this.rmsgs[0:0]
 
 	for i, t := range topics {
+		var isPrivliged = regexp.MustCompile(`[#+]`)
+		if isPrivliged.MatchString(string(t)) {
+			if val, ok := AllowedMap[this.sess.ID()]; !ok {
+				return errors.New("Subscriber not allowed to use wildcards")
+			}
+		}
 		rqos, err := this.topicsMgr.Subscribe(t, qos[i], &this.onpub)
 		if err != nil {
 			return err
