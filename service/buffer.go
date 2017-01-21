@@ -17,6 +17,7 @@ package service
 import (
 	"bufio"
 	"fmt"
+	"net"
 	"io"
 	"sync"
 	"sync/atomic"
@@ -159,6 +160,11 @@ func (this *buffer) ReadFrom(r io.Reader) (int64, error) {
 			_, err := this.WriteCommit(n)
 			if err != nil {
 				return total, err
+			}
+		}
+		if opError, ok := err.(*net.OpError); ok {
+			if opError.Err.Error() == "use of closed network connection" {
+				return total, io.EOF
 			}
 		}
 
